@@ -90,4 +90,7 @@ Vagrant.configure("2") do |config|
     pip install -r requirements.txt
     deactivate
   SHELL
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    sudo docker container restart neo-privatenet
+  SHELL
 end
