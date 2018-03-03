@@ -69,8 +69,8 @@ Vagrant.configure("2") do |config|
     apt-get --yes --force-yes install software-properties-common python-software-properties
     apt-get update
     curl -sSL https://get.docker.com/ | sh
-    docker pull metachris/neo-privnet-with-gas
-    docker run -d --name neo-privnet-with-gas -p 20333-20336:20333-20336/tcp -p 30333-30336:30333-30336/tcp metachris/neo-privnet-with-gas
+    docker pull cityofzion/neo-privatenet
+    docker run -d --name neo-privatenet -p 20333-20336:20333-20336/tcp -p 30333-30336:30333-30336/tcp cityofzion/neo-privatenet
     git clone https://github.com/CityOfZion/neo-python.git
     cd neo-python/
     sed -i 's/127.0.0.1/172.17.0.2/g' protocol.privnet.json
