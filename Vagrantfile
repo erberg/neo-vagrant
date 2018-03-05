@@ -73,6 +73,7 @@ Vagrant.configure("2") do |config|
     docker run -d --name neo-privatenet -p 20333-20336:20333-20336/tcp -p 30333-30336:30333-30336/tcp cityofzion/neo-privatenet
     git clone https://github.com/CityOfZion/neo-python.git
     cd neo-python/
+    wget https://s3.amazonaws.com/neo-experiments/neo-privnet.wallet
     sed -i 's/127.0.0.1/172.17.0.2/g' protocol.privnet.json
     apt-get --yes --force-yes install python3.6 python3.6-dev python3.6-venv python3-pip libleveldb-dev libssl-dev g++
     pip3 completion --bash >> ~/.bashrc
