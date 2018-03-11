@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
   config.vm.network "forwarded_port", guest: 20333, host: 20333, host_ip: "127.0.0.1"
-
+  config.vm.network "forwarded_port", guest: 4000, host: 4000, host_ip: "127.0.0.1"
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   config.vm.network "private_network", ip: "192.168.33.10"
@@ -66,15 +66,19 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     sudo su
     add-apt-repository ppa:fkrull/deadsnakes
-    apt-get --yes --force-yes install software-properties-common python-software-properties
+    apt-get --yes --force-yes install software-properties-common
     apt-get update
     curl -sSL https://get.docker.com/ | sh
-    docker pull cityofzion/neo-privatenet
-    docker run -d --name neo-privatenet -p 20333-20336:20333-20336/tcp -p 30333-30336:30333-30336/tcp cityofzion/neo-privatenet
+    git clone https://github.com/slipo/neo-scan-docker
+    curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+    cd neo-scan-docker
+    docker-compose up -d
+    cd ..
     git clone https://github.com/CityOfZion/neo-python.git
     cd neo-python/
     wget https://s3.amazonaws.com/neo-experiments/neo-privnet.wallet
-    sed -i 's/127.0.0.1/172.17.0.2/g' protocol.privnet.json
+    sed -i 's/127.0.0.1/0.0.0.0/g' protocol.privnet.json
     apt-get --yes --force-yes install python3.6 python3.6-dev python3.6-venv python3-pip libleveldb-dev libssl-dev g++
     pip3 completion --bash >> ~/.bashrc
     source ~/.bashrc
@@ -90,8 +94,5 @@ Vagrant.configure("2") do |config|
     source venv/bin/activate
     pip install -r requirements.txt
     deactivate
-  SHELL
-  config.vm.provision "shell", run: "always", inline: <<-SHELL
-    sudo docker container restart neo-privatenet
   SHELL
 end
